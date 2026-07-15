@@ -1,0 +1,7 @@
+import Link from "next/link";
+import DeletePostButton from "@/components/DeletePostButton";
+import { createClient } from "@/lib/supabase/server";
+import { formatDate } from "@/lib/posts";
+export const dynamic="force-dynamic";
+export default async function AdminPage(){const supabase=await createClient();const {data:posts,error}=await supabase.from("posts").select("*").order("updated_at",{ascending:false});if(error)throw error;return <div><div className="admin-heading"><div><span className="home-kicker">Dashboard</span><h1>文章管理</h1><p>管理草稿、已发布文章和封面图片。</p></div><Link href="/admin/posts/new">＋ 新建文章</Link></div><div className="admin-stats"><div><small>全部文章</small><b>{posts.length}</b></div><div><small>已发布</small><b>{posts.filter(p=>p.status==="published").length}</b></div><div><small>草稿</small><b>{posts.filter(p=>p.status==="draft").length}</b></div></div><section className="post-table"><header><span>文章</span><span>状态</span><span>更新时间</span><span>操作</span></header>{posts.map(post=><article key={post.id}><span><b>{post.title}</b><small>/{post.slug}</small></span><span><i className={post.status}>{post.status==="published"?"已发布":"草稿"}</i></span><span>{formatDate(post.updated_at)}</span><span><Link href={`/admin/posts/${post.id}/edit`}>编辑</Link><DeletePostButton id={post.id} title={post.title}/></span></article>)}{!posts.length&&<div className="empty-state">还没有文章，开始写第一篇吧。</div>}</section></div>}
+
