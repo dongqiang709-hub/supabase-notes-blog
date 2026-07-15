@@ -1,5 +1,7 @@
 # Notes Blog
 
+Production: https://supabase-notes-blog.vercel.app
+
 一个用于实践 Vercel 与 Supabase 集成的简单博客系统。
 
 ## 技术栈
